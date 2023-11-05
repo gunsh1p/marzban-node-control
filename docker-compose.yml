@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+    web:
+        build: .
+        restart: always
+        environment:
+            SECRET: ${SECRET}
+            DEBUG: ${DEBUG}
+            ADMIN_NAME: ${ADMIN_NAME}
+            ADMIN_PASS: ${ADMIN_PASS}
+            ADMIN_MAIL: ${ADMIN_MAIL}
+            DB_NAME: ${DB_NAME}
+            DB_USER: ${DB_USER}
+            DB_PASS: ${DB_PASS}
+            DB_ADDRESS: ${DB_ADDRESS}
+        ports:
+            - "${DJANGO_PORT}:8000"
+        depends_on:
+            - db
+    db:
+        image: mariadb:latest
+        restart: always
+        environment:
+            MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASS}
+            MARIADB_DATABASE: ${DB_NAME}
+            MARIADB_USER: ${DB_USER}
+            MARIADB_PASSWORD: ${DB_PASS}
+        volumes:
+            - "./data/db:/var/lib/mysql"
+    redis:
+        image: redis:7.0
