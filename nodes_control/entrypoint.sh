@@ -26,5 +26,9 @@ printf "$script" | python manage.py shell
 echo "Collect static"
 python manage.py collectstatic --noinput
 
+echo "Run Celery"
+celery -A nodes_control worker -l info --detach
+celery -A nodes_control beat -l info --detach
+
 echo "Run server"
 gunicorn --bind 0.0.0.0:8000 nodes_control.asgi -k uvicorn.workers.UvicornWorker -w 4
